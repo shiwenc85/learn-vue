@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .product {
+            margin: 10px 20px;
+            line-height: 1.5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px 25px;
+            width: 18rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 2px 3px 5px #555;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="count++">count:{{ count }}</button>
+        <input type="text" v-model="msg">
+        {{msg}}
+        <div class="products">
+            <div v-for="product in products" class="product">
+                <div><img :src="product.img" alt="" :style="product.style"></div>
+                <div>{{product.name}}</div>
+                <div>NT${{product.price}}</div>
+                <div>
+                    <button @click="product.amount -= 1">-</button>
+                    {{product.amount}}
+                    <button @click="product.amount++">+</button>
+                </div>
+            </div>
+        </div>
+        <div v-if="count < 5">
+            1
+        </div>
+        <div v-else>
+            2
+        </div>
+
+        總額：{{totalPrice}}
+    </div>
+
+    <script>
+        const { ref, computed } = Vue
+
+        Vue.createApp({
+            setup() {
+                const products = ref([
+                    {
+                        img: './assets/dog.webp',
+                        name: 'dog',
+                        amount: 0,
+                        price: 50,
+                        style: 'opacity:50%'
+                    },
+                    {
+                        img: './assets/cat.jpg',
+                        name: 'cat',
+                        amount: 0,
+                        price: 60,
+                        style: ''
+                    },
+                    {
+                        img: './assets/cow.jpg',
+                        name: 'cow',
+                        amount: 0,
+                        price: 100,
+                        style: ''
+                    },
+                ])
+                const count = ref(0)
+                const totalPrice = computed(() => {
+                    return products.value.reduce((x, a) => a.amount * a.price + x, 0)
+                })
+                const msg = ref('')
+                return {
+                    msg,
+                    count,
+                    products,
+                    totalPrice
+                }
+            }
+        }).mount("#app")
+    </script>
+</body>
+
+</html>
